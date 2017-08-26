@@ -3,6 +3,9 @@
     "gamma": "^1.0.0",
     "sw-toolbox": "^3.6.0"
   },
+  "scripts": {
+    "start": "chastifol [ watchify -d -v -o out/main.js src/main.js ] [ watchify -d -v -o out/sw.js src/sw.js ] [ http-server -c0 ]"
+  },
   "devDependencies": {
     "browserify": "^14.4.0",
     "chastifol": "^4.1.0",
