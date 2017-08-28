@@ -1,22 +1,31 @@
 /* eslint-env serviceworker */
-const querystring = require('querystring')
-const toolbox = require('sw-toolbox')
-const url = require('url')
+import Workbox from 'workbox-sw'
+import url from 'url'
+import querystring from 'querystring'
 
 const location = url.parse(self.location.href)
 const params = querystring.parse(location.query)
-toolbox.options.cache.name = 'app_' + params.version
-toolbox.options.debug = params.debug === 'true'
 
-toolbox.precache([
-  '/',
-  '/index.html',
-  '/out/main.js'
-])
+const workbox = new Workbox({
+  cacheId: 'app_' + params.version,
+  clientsClaim: true
+})
 
-toolbox.router.get('/out/main.js', toolbox.networkFirst)
-toolbox.router.get('/', toolbox.networkFirst)
-toolbox.router.get('/index.html', toolbox.networkFirst)
+const logLevels = {
+  true: workbox.LOG_LEVEL.verbose,
+  false: workbox.LOG_LEVEL.none
+}
+workbox.logLevel = logLevels[params.debug === 'true']
+
+const networkFirst = workbox.strategies.networkFirst()
+
+workbox.precache([]);
+
+workbox.router.registerRoute('/out/main.js', networkFirst)
+workbox.router.registerRoute('/', networkFirst)
+workbox.router.registerRoute('/sw.js', networkFirst)
+
+console.log('workbox', workbox)
 
 self.addEventListener('install', event => {
   // toolbox handles main install events.

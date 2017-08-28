@@ -1,13 +1,19 @@
 {
   "dependencies": {
     "gamma": "^1.0.0",
-    "sw-toolbox": "^3.6.0"
+    "sw-toolbox": "^3.6.0",
+    "the-answer": "^1.0.0",
+    "workbox-sw": "^2.0.0"
   },
   "scripts": {
-    "start": "chastifol [ watchify -d -v -o out/main.js src/main.js ] [ watchify -d -v -o out/sw.js src/sw.js ] [ http-server -c0 ]"
+    "start": "chastifol [ npm run js:main:watch ] [ npm run js:sw:watch ] [ http-server -c0 ]",
+    "js:main": "rollup -c -f iife -i src/main.js -n main -o out/main.js",
+    "js:main:watch": "rollup -c -f iife -i src/main.js -n main -o out/main.js --watch",
+    "js:sw": "rollup -c -f iife -i src/sw.js -n sw -o out/sw.js",
+    "js:sw:watch": "rollup -c -f iife -i src/sw.js -n sw -o out/sw.js --watch",
+    "workbox": "workbox inject:manifest"
   },
   "devDependencies": {
-    "browserify": "^14.4.0",
     "chastifol": "^4.1.0",
     "eslint": "^4.5.0",
     "eslint-config-standard": "^10.2.1",
@@ -16,6 +22,10 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "http-server": "^0.10.0",
-    "watchify": "^3.9.0"
+    "rollup": "^0.49.0",
+    "rollup-plugin-commonjs": "^8.2.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "workbox-cli": "^2.0.0"
   }
 }
